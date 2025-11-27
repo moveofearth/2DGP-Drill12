@@ -204,6 +204,8 @@ class Zombie:
         a6 = Action('도망', self.runaway_from_boy)
         root =  runaway_from_boy = Sequence('소년으로부터 도망', c0, c2, a6)
 
+        root = chase_or_runaway_or_flee = Selector('추적 또는 도망 또는 배회', chase_boy, runaway_from_boy,wander)
+
         a5 = Action('순찰 위치 가져오기', self.get_patrol_location)
         patrol = Sequence('순찰', a5, a2)
 
