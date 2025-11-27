@@ -5,7 +5,7 @@ import math
 import game_framework
 import game_world
 from behavior_tree import BehaviorTree, Action, Sequence, Condition, Selector
-
+import common
 
 # zombie Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
@@ -74,6 +74,9 @@ class Zombie:
         self.font.draw(self.x - 10, self.y + 60, f'{self.ball_count}', (0, 0, 255))
         Zombie.marker_image.draw(self.tx+25, self.ty-25)
 
+        draw_rectangle(*self.get_bb())
+        draw_circle(self.x, self.y, int(7 * PIXEL_PER_METER), 255, 0, 0)
+
 
 
         draw_rectangle(*self.get_bb())
@@ -132,10 +135,16 @@ class Zombie:
         return BehaviorTree.SUCCESS
         pass
 
+    def zombie_boy_ball_compare(self):
+        if self.ball_count > common.boy.ball_count:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+        pass
 
     def if_boy_nearby(self, distance):
         # 여기를 채우시오.
-        if self.distance_less_than(common.boy.x, common.boy.y, self.x, self.y, r):
+        if self.distance_less_than(common.boy.x, common.boy.y, self.x, self.y, 7):
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
@@ -166,19 +175,19 @@ class Zombie:
         # 여기를 채우시오.
         a1 = Action('Set target location', self.set_target_location, 500, 50)
         a2 = Action('Move to', self.move_to)
-        root = self.move_to_target_location = Sequence('Move to target location', a1, a2)
+        root = move_to_target_location = Sequence('Move to target location', a1, a2)
 
         a3 = Action('Set random location', self.set_random_location)
         root = wander = Sequence('Wander', a3, a2)
 
         c1 = Condition('소년이 근처에 있는가?', self.if_boy_nearby, 7)
-        a4 = Action('소년한테 접근', self.move_to_boy)
+        a4 = Action('접근', self.move_to_boy)
         root = chase_boy = Sequence('소년을 추적', c1, a4)
 
         root = chase_or_flee = Selector('추적 또는 배회', chase_boy, wander)
 
         a5 = Action('순찰 위치 가져오기', self.get_patrol_location)
-        root = patrol = Sequence('순찰', a5, a2)
+        patrol = Sequence('순찰', a5, a2)
 
         self.bt = BehaviorTree(root)
         pass
