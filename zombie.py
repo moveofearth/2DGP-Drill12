@@ -140,7 +140,7 @@ class Zombie:
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
-        pass
+        
 
     def if_boy_nearby(self, distance):
         # 여기를 채우시오.
