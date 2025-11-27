@@ -136,19 +136,25 @@ class Zombie:
         pass
 
     def zombie_boy_ball_compare(self):
-        if self.ball_count > common.boy.ball_count:
+        if self.ball_count >= common.boy.ball_count:
             return BehaviorTree.SUCCESS
         else:
             return BehaviorTree.FAIL
 
-    def run_from_boy(self):
+    def boy_zombie_ball_compare(self):
+        if common.boy.ball_count > self.ball_count:
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.FAIL
+
+    def runaway_from_boy(self):
         self.state = 'Walk'
         self.dir = math.atan2(self.y - common.boy.y, self.x - common.boy.x)
         distance = RUN_SPEED_PPS * game_framework.frame_time
         self.x += distance * math.cos(self.dir)
         self.y += distance * math.sin(self.dir)
         return BehaviorTree.RUNNING
-    
+
 
     def if_boy_nearby(self, distance):
         # 여기를 채우시오.
