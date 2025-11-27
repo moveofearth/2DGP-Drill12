@@ -194,7 +194,9 @@ class Zombie:
         a3 = Action('Set random location', self.set_random_location)
         root = wander = Sequence('Wander', a3, a2)
 
-        c1 = Condition('소년이 근처에 있는가?', self.if_boy_nearby, 7)
+
+        c0 = Condition('소년이 근처에 있는가?', self.if_boy_nearby, 7)
+        c1 = Condition('좀비가 소년보다 공을 더 많이 가지고 있는가?', self.zombie_boy_ball_compare)
         a4 = Action('접근', self.move_to_boy)
         root = chase_boy = Sequence('소년을 추적', c1, a4)
 
